@@ -118,7 +118,7 @@ STEP 5 — DEPLOY ON NETLIFY
    RESEND_API_KEY       = re_xxxxxxxxxxxxxxxx
    JWT_SECRET           = (your 128 char hex string)
    ADMIN_PASSWORD_HASH  = $2b$12$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-   OWNER_EMAIL          = lakshitaajakhar@gmail.com
+   OWNER_EMAIL          = your-email@gmail.com
 
 7. After adding env vars → Deploys → Trigger deploy
 
