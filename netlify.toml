@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  SECRETS_SCAN_OMIT_PATHS = "public/admin.html,public/admin/index.html"
 
 [[redirects]]
   from = "/admin"
