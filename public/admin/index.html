@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Lakshita Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0e14;--bg2:#13141a;--bg3:#1a1b24;--bg4:#20212e;
+  --gold:#F0A500;--gold2:#FFD166;
+  --text:#E8EAF6;--muted:#6B6E8A;--dim:#3A3D55;
+  --green:#22c55e;--red:#ef4444;--blue:#3b82f6;
+  --r:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Cabinet Grotesk',sans-serif}
+
+/* LOGIN */
+#login{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(240,165,0,.08),transparent 60%);
+}
+.login-box{
+  background:var(--bg2);border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;padding:48px;width:100%;max-width:400px;
+}
+.login-logo{font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.login-sub{font-size:.84rem;color:var(--muted);margin-bottom:36px}
+.login-box label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.login-box input{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:13px 16px;font-family:inherit;font-size:.9rem;
+  color:var(--text);outline:none;transition:border-color .2s;
+}
+.login-box input:focus{border-color:rgba(240,165,0,.45)}
+.login-btn{
+  width:100%;margin-top:20px;padding:14px;
+  background:var(--gold);color:#0d0e14;border:none;border-radius:10px;
+  font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;
+  transition:all .2s;
+}
+.login-btn:hover{background:var(--gold2);transform:translateY(-2px)}
+.login-err{margin-top:14px;padding:10px 14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;font-size:.82rem;color:var(--red);display:none}
+
+/* APP */
+#app{display:none;min-height:100vh}
+.sidebar{
+  width:220px;height:100vh;position:fixed;top:0;left:0;
+  background:var(--bg2);border-right:1px solid rgba(255,255,255,.05);
+  display:flex;flex-direction:column;padding:28px 16px;
+  z-index:10;
+}
+.sidebar-logo{font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:4px;padding:0 8px}
+.sidebar-sub{font-size:.72rem;color:var(--muted);padding:0 8px;margin-bottom:28px}
+.s-link{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:10px;font-size:.84rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:3px;
+  user-select:none;
+}
+.s-link:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.s-link.on{background:rgba(240,165,0,.08);border-color:rgba(240,165,0,.15);color:var(--gold)}
+.s-link svg{width:16px;height:16px;flex-shrink:0}
+.sb-badge{
+  font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:100px;
+  background:var(--red);color:#fff;margin-left:auto;
+}
+.sidebar-foot{margin-top:auto}
+.logout-btn{
+  width:100%;padding:10px 12px;background:rgba(239,68,68,.08);
+  border:1px solid rgba(239,68,68,.18);border-radius:10px;
+  color:var(--red);font-family:inherit;font-size:.82rem;font-weight:600;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;
+}
+.logout-btn:hover{background:rgba(239,68,68,.15)}
+.logout-btn svg{width:14px;height:14px}
+
+.content{margin-left:220px;padding:36px 40px;min-height:100vh}
+.view{display:none}
+.view.on{display:block}
+
+/* HEADER */
+.pg-title{font-size:1.6rem;font-weight:700;margin-bottom:4px;letter-spacing:-.02em}
+.pg-sub{font-size:.84rem;color:var(--muted);margin-bottom:32px}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.stat{
+  background:var(--bg2);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--r);padding:22px;transition:all .2s;
+}
+.stat:hover{border-color:rgba(240,165,0,.2);transform:translateY(-3px)}
+.stat-val{font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:4px}
+.stat-label{font-size:.74rem;color:var(--muted)}
+.stat-sub{font-size:.72rem;color:var(--dim);margin-top:6px}
+
+/* CHARTS */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+.card{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:24px}
+.card-title{font-size:.84rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px}
+
+/* BAR CHART */
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bc-row{display:flex;align-items:center;gap:10px}
+.bc-label{font-size:.76rem;color:var(--muted);width:80px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-bar-wrap{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:6px;overflow:hidden}
+.bc-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .8s cubic-bezier(.25,.46,.45,.94)}
+.bc-val{font-size:.74rem;color:var(--text);width:32px;text-align:right;flex-shrink:0}
+
+/* DAILY CHART */
+.daily-wrap{display:flex;align-items:flex-end;gap:4px;height:80px}
+.day-bar{flex:1;background:rgba(240,165,0,.2);border-radius:3px 3px 0 0;transition:all .6s;min-height:2px;cursor:default;position:relative}
+.day-bar:hover{background:var(--gold)}
+.day-bar::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#13141a;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 8px;font-size:.68rem;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}
+.day-bar:hover::after{opacity:1}
+
+/* MESSAGES TABLE */
+.msg-filters{display:flex;gap:10px;margin-bottom:20px;align-items:center}
+.filter-btn{padding:7px 16px;border-radius:8px;font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.08);background:transparent;color:var(--muted);transition:all .2s}
+.filter-btn.on,.filter-btn:hover{background:rgba(240,165,0,.1);border-color:rgba(240,165,0,.25);color:var(--gold)}
+.msg-search{flex:1;padding:8px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-family:inherit;font-size:.82rem;color:var(--text);outline:none}
+.msg-search:focus{border-color:rgba(240,165,0,.3)}
+.msg-search::placeholder{color:var(--dim)}
+
+.msg-list{display:flex;flex-direction:column;gap:10px}
+.msg-card{
+  background:var(--bg2);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--r);padding:20px;cursor:pointer;
+  transition:all .2s;position:relative;
+}
+.msg-card:hover{border-color:rgba(240,165,0,.2);transform:translateX(4px)}
+.msg-card.unread{border-left:3px solid var(--gold)}
+.msg-card.expanded{background:var(--bg3)}
+.msg-top{display:flex;align-items:flex-start;gap:14px}
+.msg-avatar{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),#e07800);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.9rem;color:#13141a;
+}
+.msg-info{flex:1;min-width:0}
+.msg-name{font-weight:600;font-size:.9rem;margin-bottom:2px}
+.msg-subject{font-size:.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-meta{font-size:.72rem;color:var(--dim);margin-top:4px}
+.msg-actions{display:flex;gap:8px;flex-shrink:0}
+.msg-btn{
+  width:30px;height:30px;border-radius:7px;border:1px solid rgba(255,255,255,.08);
+  background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);transition:all .2s;
+}
+.msg-btn.del:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red)}
+.msg-btn.read:hover{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:var(--green)}
+.msg-btn svg{width:13px;height:13px}
+.msg-body{display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.05)}
+.msg-card.expanded .msg-body{display:block}
+.msg-text{font-size:.86rem;color:var(--muted);line-height:1.75;white-space:pre-wrap}
+.msg-reply{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  padding:7px 14px;background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.2);
+  border-radius:7px;color:var(--gold);font-size:.76rem;font-weight:600;
+  text-decoration:none;transition:all .2s;
+}
+.msg-reply:hover{background:rgba(240,165,0,.18)}
+
+.empty{text-align:center;padding:60px 0;color:var(--dim);font-size:.9rem}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--muted)}
+.spin{width:24px;height:24px;border:2px solid rgba(240,165,0,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin-right:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--bg3);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:12px 18px;font-size:.84rem;
+  transform:translateY(80px);opacity:0;transition:all .3s;z-index:1000;
+  display:flex;align-items:center;gap:8px;
+}
+#toast.show{transform:none;opacity:1}
+#toast.success{border-color:rgba(34,197,94,.3);color:var(--green)}
+#toast.error{border-color:rgba(239,68,68,.3);color:var(--red)}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;padding:16px}
+  .content{margin-left:0;padding:20px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .charts-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">⚡ Admin Panel</div>
+    <div class="login-sub">Lakshita Jakhar · Portfolio Dashboard</div>
+    <label>Password</label>
+    <input type="password" id="pwd" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">⚡ Admin</div>
+    <div class="sidebar-sub">Lakshita's Portfolio</div>
+
+    <div class="s-link on" onclick="showView('analytics')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Analytics
+    </div>
+    <div class="s-link" onclick="showView('messages')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Messages
+      <span class="sb-badge" id="unread-badge" style="display:none">0</span>
+    </div>
+
+    <div class="sidebar-foot">
+      <button class="logout-btn" onclick="logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ANALYTICS VIEW -->
+    <div class="view on" id="view-analytics">
+      <div class="pg-title">Analytics</div>
+      <div class="pg-sub">Visitor statistics for your portfolio</div>
+
+      <div class="stats-row" id="stat-cards">
+        <div class="loading"><div class="spin"></div>Loading...</div>
+      </div>
+
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-title">Last 14 Days</div>
+          <div class="daily-wrap" id="daily-chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Top Pages</div>
+          <div class="bar-chart" id="pages-chart"></div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-title">Top Countries</div>
+          <div class="bar-chart" id="countries-chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Recent Visitors</div>
+          <div id="recent-list" style="font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:7px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MESSAGES VIEW -->
+    <div class="view" id="view-messages">
+      <div class="pg-title">Messages</div>
+      <div class="pg-sub">Contact form submissions</div>
+
+      <div class="msg-filters">
+        <button class="filter-btn on" onclick="filterMsgs('all',this)">All</button>
+        <button class="filter-btn" onclick="filterMsgs('unread',this)">Unread</button>
+        <button class="filter-btn" onclick="filterMsgs('read',this)">Read</button>
+        <input class="msg-search" id="msg-search" placeholder="Search messages..." oninput="renderMsgs()">
+      </div>
+
+      <div id="msg-container">
+        <div class="loading"><div class="spin"></div>Loading messages...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let TOKEN = localStorage.getItem('admin_token') || '';
+let allMessages = [];
+let msgFilter = 'all';
+
+// ── AUTH
+async function doLogin() {
+  const pwd = document.getElementById('pwd').value;
+  const err = document.getElementById('login-err');
+  err.style.display = 'none';
+
+  try {
+    const res = await fetch('/.netlify/functions/auth', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pwd})
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    TOKEN = data.token;
+    localStorage.setItem('admin_token', TOKEN);
+    showApp();
+  } catch(e) {
+    err.textContent = e.message || 'Login failed';
+    err.style.display = 'block';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('admin_token');
+  TOKEN = '';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login').style.display = 'flex';
+}
+
+async function checkAuth() {
+  if (!TOKEN) return false;
+  try {
+    const res = await fetch('/.netlify/functions/auth', {
+      headers: {Authorization: `Bearer ${TOKEN}`}
+    });
+    return res.ok;
+  } catch { return false; }
+}
+
+async function showApp() {
+  const valid = await checkAuth();
+  if (!valid) { logout(); return; }
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadAnalytics();
+  loadMessages();
+}
+
+// ── VIEWS
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  document.querySelectorAll('.s-link').forEach(l => l.classList.remove('on'));
+  document.getElementById('view-' + name).classList.add('on');
+  event.currentTarget.classList.add('on');
+}
+
+// ── ANALYTICS
+async function loadAnalytics() {
+  try {
+    const res = await fetch('/.netlify/functions/analytics', {
+      headers: {Authorization: `Bearer ${TOKEN}`}
+    });
+    const d = await res.json();
+
+    // Stat cards
+    document.getElementById('stat-cards').innerHTML = `
+      <div class="stat"><div class="stat-val">${d.total.toLocaleString()}</div><div class="stat-label">Total Visits</div><div class="stat-sub">All time</div></div>
+      <div class="stat"><div class="stat-val">${d.today}</div><div class="stat-label">Today</div><div class="stat-sub">Last 24 hours</div></div>
+      <div class="stat"><div class="stat-val">${d.thisWeek}</div><div class="stat-label">This Week</div><div class="stat-sub">Last 7 days</div></div>
+      <div class="stat"><div class="stat-val">${d.thisMonth}</div><div class="stat-label">This Month</div><div class="stat-sub">Last 30 days</div></div>
+    `;
+
+    // Daily chart
+    const dailyEl = document.getElementById('daily-chart');
+    if (d.daily?.length) {
+      const max = Math.max(...d.daily.map(x => x.count));
+      dailyEl.innerHTML = d.daily.map(x => {
+        const h = Math.max(4, (x.count / max) * 80);
+        return `<div class="day-bar" style="height:${h}px" data-tip="${x._id}: ${x.count} visits"></div>`;
+      }).join('');
+    }
+
+    // Pages chart
+    renderBarChart('pages-chart', d.byPage || [], '_id', 'count');
+    renderBarChart('countries-chart', d.byCountry || [], '_id', 'count');
+
+    // Recent
+    const recEl = document.getElementById('recent-list');
+    recEl.innerHTML = (d.recent || []).map(r =>
+      `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+        <span>${r.page || '/'}</span>
+        <span style="color:var(--dim)">${new Date(r.createdAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}</span>
+      </div>`
+    ).join('');
+  } catch(e) {
+    console.error('Analytics error:', e);
+  }
+}
+
+function renderBarChart(id, data, labelKey, valKey) {
+  if (!data.length) { document.getElementById(id).innerHTML = '<div class="empty">No data yet</div>'; return; }
+  const max = Math.max(...data.map(x => x[valKey]));
+  document.getElementById(id).innerHTML = data.map(x =>
+    `<div class="bc-row">
+      <span class="bc-label" title="${x[labelKey]}">${x[labelKey] || 'Unknown'}</span>
+      <div class="bc-bar-wrap"><div class="bc-bar" style="width:${(x[valKey]/max*100).toFixed(1)}%"></div></div>
+      <span class="bc-val">${x[valKey]}</span>
+    </div>`
+  ).join('');
+}
+
+// ── MESSAGES
+async function loadMessages() {
+  try {
+    const res = await fetch('/.netlify/functions/messages', {
+      headers: {Authorization: `Bearer ${TOKEN}`}
+    });
+    const d = await res.json();
+    allMessages = d.messages || [];
+    const badge = document.getElementById('unread-badge');
+    if (d.unread > 0) { badge.style.display = 'inline'; badge.textContent = d.unread; }
+    else { badge.style.display = 'none'; }
+    renderMsgs();
+  } catch(e) {
+    document.getElementById('msg-container').innerHTML = `<div class="empty">Failed to load messages</div>`;
+  }
+}
+
+function filterMsgs(f, btn) {
+  msgFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderMsgs();
+}
+
+function renderMsgs() {
+  const search = document.getElementById('msg-search').value.toLowerCase();
+  let msgs = allMessages;
+  if (msgFilter === 'unread') msgs = msgs.filter(m => !m.read);
+  if (msgFilter === 'read') msgs = msgs.filter(m => m.read);
+  if (search) msgs = msgs.filter(m =>
+    m.name.toLowerCase().includes(search) ||
+    m.email.toLowerCase().includes(search) ||
+    m.subject.toLowerCase().includes(search) ||
+    m.message.toLowerCase().includes(search)
+  );
+
+  if (!msgs.length) {
+    document.getElementById('msg-container').innerHTML = '<div class="empty">No messages found</div>';
+    return;
+  }
+
+  document.getElementById('msg-container').innerHTML = `<div class="msg-list">${
+    msgs.map(m => `
+      <div class="msg-card ${m.read ? '' : 'unread'}" id="msg-${m._id}" onclick="toggleMsg('${m._id}')">
+        <div class="msg-top">
+          <div class="msg-avatar">${m.name.charAt(0).toUpperCase()}</div>
+          <div class="msg-info">
+            <div class="msg-name">${esc(m.name)} ${m.read ? '' : '<span style="font-size:.65rem;background:var(--gold);color:#13141a;padding:2px 7px;border-radius:100px;font-weight:700;margin-left:6px">NEW</span>'}</div>
+            <div class="msg-subject">${esc(m.subject)}</div>
+            <div class="msg-meta">${esc(m.email)} · ${new Date(m.createdAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}</div>
+          </div>
+          <div class="msg-actions" onclick="event.stopPropagation()">
+            ${!m.read ? `<button class="msg-btn read" onclick="markRead('${m._id}')" title="Mark as read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>` : ''}
+            <button class="msg-btn del" onclick="deleteMsg('${m._id}')" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6m4-6v6"/><path d="M9 6V4h6v2"/></svg></button>
+          </div>
+        </div>
+        <div class="msg-body">
+          <div class="msg-text">${esc(m.message)}</div>
+          <a href="mailto:${esc(m.email)}?subject=Re: ${esc(m.subject)}" class="msg-reply">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>
+            Reply to ${esc(m.name)}
+          </a>
+        </div>
+      </div>
+    `).join('')
+  }</div>`;
+}
+
+function toggleMsg(id) {
+  const card = document.getElementById('msg-' + id);
+  card.classList.toggle('expanded');
+  // Auto mark as read when opened
+  const msg = allMessages.find(m => m._id === id);
+  if (msg && !msg.read) markRead(id);
+}
+
+async function markRead(id) {
+  try {
+    await fetch(`/.netlify/functions/messages?id=${id}`, {
+      method:'PATCH', headers:{Authorization:`Bearer ${TOKEN}`}
+    });
+    const msg = allMessages.find(m => m._id === id);
+    if (msg) msg.read = true;
+    renderMsgs();
+    updateUnreadBadge();
+    toast('Marked as read', 'success');
+  } catch { toast('Failed', 'error'); }
+}
+
+async function deleteMsg(id) {
+  if (!confirm('Delete this message?')) return;
+  try {
+    await fetch(`/.netlify/functions/messages?id=${id}`, {
+      method:'DELETE', headers:{Authorization:`Bearer ${TOKEN}`}
+    });
+    allMessages = allMessages.filter(m => m._id !== id);
+    renderMsgs();
+    updateUnreadBadge();
+    toast('Message deleted', 'success');
+  } catch { toast('Failed to delete', 'error'); }
+}
+
+function updateUnreadBadge() {
+  const unread = allMessages.filter(m => !m.read).length;
+  const badge = document.getElementById('unread-badge');
+  badge.style.display = unread > 0 ? 'inline' : 'none';
+  badge.textContent = unread;
+}
+
+// ── HELPERS
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = type === 'success' ? '✓ ' + msg : '✗ ' + msg;
+  t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3000);
+}
+
+// ── INIT
+(async () => {
+  if (TOKEN && await checkAuth()) showApp();
+  // Allow enter key on login
+  document.getElementById('pwd').focus();
+})();
+</script>
+</body>
+</html>
